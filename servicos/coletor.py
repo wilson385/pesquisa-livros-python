@@ -1,10 +1,9 @@
 # Importa a biblioteca que permite fazer requisições HTTP
 import requests
 
-def pesquisar_livros():
+def pesquisar_livros(titulo):
     # Define a URL da API do Open Library para pesquisa de livros
     url = "https://openlibrary.org/search.json"
-    titulo = "Guerra"
 
     # O parâmetro params permite enviar informações na URL para a API realizar a pesquisa
     resposta = requests.get(url,params={"title": titulo, "limit": 10}, timeout=15)
@@ -27,9 +26,12 @@ def pesquisar_livros():
     # O return devolve a lista para quem chamou a função
     return livros
 
-    # Chama a função para executar a pesquisa
-rel = pesquisar_livros()
-print(rel) # Imprime o resultado da pesquisa no console
+# Teste temporário da API.
+if __name__ == "__main__":
+    rel = pesquisar_livros("Harry Potter")
+
+    for livro in rel:
+        print(livro)
 
 
 
