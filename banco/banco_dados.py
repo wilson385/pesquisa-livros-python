@@ -1,4 +1,4 @@
-CREATE TABLE Livros (
+CREATE TABLE livros (
     id SERIAL PRIMARY KEY, 
     nome  VARCHAR(255) NOT NULL,
     capa BYTEA,
@@ -14,7 +14,7 @@ CREATE TABLE preco (
     id_livros INT NOT NULL,
     id_loja INT NOT NULL,
     preco NUMERIC(10, 2),
-    FOREIGN KEY (id_livros) REFERENCES Livros(id),
+    FOREIGN KEY (id_livros) REFERENCES livros(id),
     FOREIGN KEY (id_loja) REFERENCES lojas(id)
 );
 
