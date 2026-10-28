@@ -1,6 +1,6 @@
 import psycopg2 as pg
 
-#função para criar as tabelas, verificar dbname=livros e user=postgres e mudar se não forem certo.
+#função para criar as tabelas, verificar dbname=livros e user=postgres e mudar se não forem certos.
 def tablemaker():
     conn = psycopg2.connect("dbname=livros user=postgres")
     cur = conn.cursor()
