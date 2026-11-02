@@ -15,7 +15,7 @@ def main():
     app = App("Pesquisa de Livros", "540x648")
     app.mainloop()
 
-
+# Se este arquivo estiver sendo executado diretamente, execute o código que está abaixo.
 # Executar o programa.
 if __name__ == "__main__":
     main()
