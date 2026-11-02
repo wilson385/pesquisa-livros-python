@@ -67,7 +67,7 @@ class HeaderBar(customtkinter.CTkFrame):
         fnt1 = customtkinter.CTkFont(font_name, 14)
 
         CTkMessagebox(
-            master=app,
+            master=self.winfo_toplevel(),
             corner_radius=0,
             font=fnt1,
             title="Descrição.",
