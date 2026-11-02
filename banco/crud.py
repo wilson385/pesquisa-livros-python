@@ -2,7 +2,7 @@ import psycopg2 as pg
 from psycopg2 import Error
 from banco_dados import conn, encerra_conn
 
-def tablemaker(): 
+def tablemaker():
     conect = conn
     cur = conn.cursor()
     try:
@@ -14,7 +14,7 @@ def tablemaker():
         cur.close()
         conect.close()
 
-def bookadd(id_exclusivo, nome, lam, autor): 
+def bookadd(id_exclusivo, nome, lam, autor):
     conect = conn
     cur = conn.cursor()
     try:
@@ -27,7 +27,7 @@ def bookadd(id_exclusivo, nome, lam, autor):
         cur.close()
         conect.close()
         
-def booklook(nome): 
+def booklook(nome):
     conect = conn
     cur = conn.cursor()
     try:
@@ -40,7 +40,7 @@ def booklook(nome):
         cur.close()
         conect.close()
         
-def bookdelete(id_exclusivo): 
+def bookdelete(id_exclusivo):
     conect = conn
     cur = conn.cursor()
     try:
@@ -53,7 +53,7 @@ def bookdelete(id_exclusivo):
         cur.close()
         conect.close()
         
-def tableclear(): 
+def tableclear():
     conect = conn
     cur = conn.cursor()
     try:
