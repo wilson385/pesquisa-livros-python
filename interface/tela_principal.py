@@ -452,3 +452,4 @@ class App(customtkinter.CTk):
 
 # Ponto de entrada do aplicativo.
 # Execute main.py para iniciar a aplicação.
+
