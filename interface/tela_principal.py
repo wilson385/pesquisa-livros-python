@@ -1,34 +1,25 @@
+# Importar a função responsável pela exportação CSV.
+from exportacao.exportacao import exportar_csv
 
-# Importar funções do módulo "coletor.py" para realizar a pesquisa de livros.
-
-# ALTERADO: o nome importado deve ser igual ao nome da função no coletor.py.
+# Importar a função responsável por pesquisar livros na API.
 from servicos.coletor import pesquisar_livros
 
-# NOVO: importar messagebox para mostrar avisos e erros na interface.
+# Importar messagebox para mostrar avisos e erros.
 from tkinter import messagebox
 
-# Importar bibliotecas usadas para a interface gráfica.
-
+# Importar bibliotecas usadas na interface gráfica.
 from CTkMessagebox import CTkMessagebox
-
 import customtkinter
 
-# Importar a biblioteca "Pillow" para utilizar imagens na interface gráfica.
+# Importar Pillow para trabalhar com imagens.
+from PIL import Image, ImageTk
 
-from PIL import (Image, ImageTk)
 
-
-#region Misc :
-
+# Configuração geral.
 font_name = "Georgia"
 
-#endregion
 
-
-#region Classes :
-
-
-# Criar classe do header da página.
+# Criar classe do cabeçalho da página.
 class HeaderBar(customtkinter.CTkFrame):
 
     def __init__(self, master, **kwargs):
@@ -44,7 +35,7 @@ class HeaderBar(customtkinter.CTkFrame):
         # Configurar alinhamento.
         self.grid_columnconfigure(0, weight=1)
 
-        # Criar os widgets da caixa de procura.
+        # Criar botão de informação.
         self.button = customtkinter.CTkButton(
             self,
             image=info_ico,
@@ -58,10 +49,8 @@ class HeaderBar(customtkinter.CTkFrame):
         )
         self.button.grid(row=0, column=0, padx=0, pady=0, sticky="e")
 
-    # Mostra um Alert contendo uma descrição do projeto e os créditos dos desenvolvedores.
+    # Mostrar uma janela com a descrição e os créditos do projeto.
     def btn_callback(self):
-
-        # Adicionar a descrição e créditos.
         print("Creditado...")
 
         fnt1 = customtkinter.CTkFont(font_name, 14)
@@ -77,28 +66,29 @@ class HeaderBar(customtkinter.CTkFrame):
         )
 
 
-# Criar classe de caixa de procura.
+# Criar classe da caixa de pesquisa.
 class SearchBar(customtkinter.CTkFrame):
 
     def __init__(self, master, command):
         super().__init__(master, fg_color="transparent")
 
-        # Criar fonte para a caixa de procura.
+        # Criar fonte para a caixa de pesquisa.
         fnt1 = customtkinter.CTkFont(font_name, 16)
 
-        # Criar imagem para o ícone de procura.
+        # Criar imagem para o ícone de pesquisa.
         search_ico = customtkinter.CTkImage(
             light_image=Image.open("interface/assets/search_ico_d.png"),
             dark_image=Image.open("interface/assets/search_ico_l.png"),
             size=(24, 24)
         )
 
+        # Guardar a função que será executada quando pesquisar.
         self.command = command
 
         # Configurar alinhamento.
-        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
 
-        # Criar os widgets da caixa de procura.
+        # Criar botão de pesquisa.
         self.button = customtkinter.CTkButton(
             self,
             image=search_ico,
@@ -113,6 +103,7 @@ class SearchBar(customtkinter.CTkFrame):
         )
         self.button.grid(row=0, column=0, padx=0, pady=0, sticky="w")
 
+        # Criar campo de texto.
         self.entry = customtkinter.CTkEntry(
             self,
             font=fnt1,
@@ -124,8 +115,7 @@ class SearchBar(customtkinter.CTkFrame):
         )
         self.entry.grid(row=0, column=1, padx=(0, 5), pady=5, sticky="we")
 
-    # Callback.
-    # ALTERADO: agora o título digitado é enviado para a função de pesquisa.
+    # Executar a pesquisa quando o usuário clicar no botão.
     def btn_callback(self):
         titulo = self.get_text().strip()
 
@@ -133,23 +123,21 @@ class SearchBar(customtkinter.CTkFrame):
             self.command(titulo)
             self.reset_text()
         else:
-            # NOVO: avisar quando o campo estiver vazio.
             messagebox.showwarning(
                 "Atenção",
                 "Digite o nome de um livro."
             )
 
-    # Reset o texto da caixa de procura.
-    # ALTERADO: CTkEntry não usa set(""); usamos delete para apagar o texto.
+    # Apagar o texto do campo de pesquisa.
     def reset_text(self):
         self.entry.delete(0, "end")
 
-    # Retorna o texto da caixa de procura
+    # Retornar o texto digitado.
     def get_text(self):
         return self.entry.get()
 
 
-# Criar classe dos livros que serão mostrados.
+# Criar classe dos livros que serão mostrados na interface.
 class Book(customtkinter.CTkFrame):
 
     def __init__(
@@ -171,33 +159,36 @@ class Book(customtkinter.CTkFrame):
         fnt1 = customtkinter.CTkFont(font_name, 14)
         fnt2 = customtkinter.CTkFont(font_name, 16)
 
+        # Criar imagem do botão de favoritos.
         bookmark_image = customtkinter.CTkImage(
             light_image=Image.open("interface/assets/bookmark_ico_d.png"),
             dark_image=Image.open("interface/assets/bookmark_ico_l.png"),
             size=(16, 24)
         )
 
-        self.image = ImageTk.PhotoImage(file=image)
+        # Guardar os dados que serão exibidos.
+        self.book_image = ImageTk.PhotoImage(file=image)
         self.book_name = book_name
-        self.author = "Autor(a) : " + author
-        self.r_date = "Data de lançamento : " + r_date
+        self.author_text = "Autor(a) : " + author
+        self.r_date_text = "Data de lançamento : " + r_date
 
-        # Configuração :
+        # Configurar alinhamento.
         self.grid_columnconfigure((0, 1, 2), weight=1)
         self.grid_rowconfigure((0, 1, 2), weight=0)
 
-        # Widgets :
+        # Exibir imagem do livro.
         self.image = customtkinter.CTkLabel(
             self,
             corner_radius=0,
             bg_color="transparent",
             font=fnt2,
             text="",
-            image=self.image,
+            image=self.book_image,
             anchor="nw"
         )
         self.image.grid(row=0, column=0, padx=(20, 0), pady=0, sticky="nw")
 
+        # Criar quadro com as informações do livro.
         self.frame1 = customtkinter.CTkFrame(
             self,
             width=128,
@@ -207,6 +198,7 @@ class Book(customtkinter.CTkFrame):
         )
         self.frame1.grid(row=0, column=1, sticky="nw")
 
+        # Exibir título.
         self.name = customtkinter.CTkLabel(
             self.frame1,
             corner_radius=0,
@@ -217,28 +209,31 @@ class Book(customtkinter.CTkFrame):
         )
         self.name.grid(row=0, column=0, padx=0, pady=0, sticky="nw")
 
+        # Exibir autor.
         self.author = customtkinter.CTkLabel(
             self.frame1,
             corner_radius=0,
             bg_color="transparent",
             font=fnt1,
             text_color="#bfbfbf",
-            text=self.author,
+            text=self.author_text,
             anchor="nw"
         )
         self.author.grid(row=1, column=0, padx=0, pady=0, sticky="nw")
 
+        # Exibir data de lançamento.
         self.r_date = customtkinter.CTkLabel(
             self.frame1,
             corner_radius=0,
             bg_color="transparent",
             font=fnt1,
             text_color="#bfbfbf",
-            text=self.r_date,
+            text=self.r_date_text,
             anchor="nw"
         )
         self.r_date.grid(row=2, column=0, padx=0, pady=0, sticky="nw")
 
+        # Criar quadro do botão de favoritos.
         self.frame2 = customtkinter.CTkFrame(
             self,
             corner_radius=0,
@@ -246,6 +241,7 @@ class Book(customtkinter.CTkFrame):
         )
         self.frame2.grid(row=0, column=2, sticky="ne")
 
+        # Criar botão de favoritos.
         self.bookmark = customtkinter.CTkButton(
             self.frame2,
             width=32,
@@ -264,22 +260,21 @@ class Book(customtkinter.CTkFrame):
     def btn_callback(self):
         self.add_bookmark()
 
-        # Fazer mais coisas aqui!!!
+        # Fazer mais coisas aqui futuramente.
 
-    # Retorna os dados do livro.
+    # Retornar os dados básicos do livro.
     def get_data(self):
-        # NOVO: devolver os dados básicos deste livro.
         return {
             "titulo": self.book_name,
-            "autor": self.author,
-            "ano": self.r_date
+            "autor": self.author_text,
+            "ano": self.r_date_text
         }
 
-    # Adiciona esse livro ao bookmark.
+    # Adicionar o livro aos favoritos.
     def add_bookmark(self):
         print("Bookmarked : " + self.book_name)
 
-        # Fazer mais coisas aqui!!!
+        # Fazer mais coisas aqui futuramente.
 
 
 # Criar classe do painel que mostra os resultados da pesquisa.
@@ -295,21 +290,16 @@ class Results(customtkinter.CTkScrollableFrame):
         )
 
         # ScrollableFrame Widget tem um problema de lag.
-        # https://github.com/TomSchimansky/CustomTkinter/issues/215
-        # Podemos usar o Widget ScrollBar e Frame do TKinter original, pelo que eu vi, ele não tem esse problema.
-        # Por enquanto eu decidi focar em outras coisas.
+        # Por enquanto, manteremos esse componente.
 
-        # Configuração :
+        # Configuração.
         self.grid_columnconfigure(0, weight=1)
 
-        # Widgets :
+        # Listas que guardam os dados e os componentes visuais.
         self.book_data_list = []
         self.book_widget_list = []
 
-        # ALTERADO: removidos os livros fictícios usados para testes.
-        # Os livros serão criados conforme os resultados da API.
-
-    # Reiniciar os resultados.
+    # Limpar os resultados anteriores.
     def refresh(self):
         for widget in self.book_widget_list:
             widget.destroy()
@@ -317,23 +307,23 @@ class Results(customtkinter.CTkScrollableFrame):
         self.book_widget_list = []
         self.book_data_list = []
 
-    # ALTERADO: usar buscar() em vez de update().
-    # O Tkinter já possui um método update() próprio.
+    # Pesquisar livros na API e mostrar os resultados.
     def buscar(self, titulo):
         self.refresh()
 
         try:
-            # NOVO: pesquisar livros na API usando o título digitado.
             livros = pesquisar_livros(titulo)
 
+            # Guardar os dados recebidos da API.
             self.book_data_list = livros
 
-            # NOVO: mostrar mensagem se a API não encontrar livros.
+            # Avisar se nenhum livro for encontrado.
             if not livros:
                 mensagem = customtkinter.CTkLabel(
                     self,
                     text="Nenhum livro encontrado."
                 )
+
                 mensagem.grid(
                     row=0,
                     column=0,
@@ -341,10 +331,11 @@ class Results(customtkinter.CTkScrollableFrame):
                     pady=15,
                     sticky="we"
                 )
+
                 self.book_widget_list.append(mensagem)
                 return
 
-            # NOVO: criar um componente Book para cada resultado recebido.
+            # Criar um componente visual para cada livro.
             for i, livro in enumerate(livros):
                 ano = livro.get("ano")
 
@@ -366,10 +357,30 @@ class Results(customtkinter.CTkScrollableFrame):
                 self.book_widget_list.append(book)
 
         except Exception as erro:
-            # NOVO: mostrar uma mensagem se ocorrer um erro na pesquisa.
             messagebox.showerror(
                 "Erro na pesquisa",
                 f"Não foi possível buscar os livros.\n{erro}"
+            )
+
+    # NOVO: exportar os livros encontrados para CSV.
+    def exportar(self):
+
+        # Verificar se existem livros para exportar.
+        if not self.book_data_list:
+            messagebox.showwarning(
+                "Atenção",
+                "Não existem livros para exportar."
+            )
+            return
+
+        # Chamar a função do arquivo exportacao.py.
+        caminho = exportar_csv(self.book_data_list)
+
+        # Se o usuário não cancelou e o arquivo foi salvo, avisar.
+        if caminho:
+            messagebox.showinfo(
+                "Exportação concluída",
+                f"Arquivo salvo com sucesso!\n{caminho}"
             )
 
 
@@ -379,7 +390,7 @@ class App(customtkinter.CTk):
     def __init__(
         self,
         title="Nome do Programa",
-        geometry="540x648",
+        geometry="540x700",
         fg_color=None,
         **kwargs
     ):
@@ -387,20 +398,16 @@ class App(customtkinter.CTk):
 
         app_ico = ImageTk.PhotoImage(file="interface/assets/app_ico.png")
 
-        # Configuração :
+        # Configurações da janela.
         self.title(title)
         self.wm_iconbitmap()
         self.iconphoto(False, app_ico)
         self.geometry(geometry)
         self.resizable(False, False)
         self.grid_columnconfigure(0, weight=1)
-        #self.grid_rowconfigure(0, weight=1)
 
-        # Widgets :
-        # Instanciar header.
+        # Instanciar cabeçalho.
         self.header = HeaderBar(self)
-
-        # Aplicar alinhamento.
         self.header.grid(
             row=0,
             column=0,
@@ -409,23 +416,18 @@ class App(customtkinter.CTk):
             sticky="ew"
         )
 
-        # Instanciar resultados.
+        # Instanciar painel de resultados.
         self.results = Results(self)
-
-        # Aplicar alinhamento.
         self.results.grid(
             row=2,
             column=0,
             padx=40,
-            pady=(20, 40),
+            pady=(20, 15),
             sticky="nsew"
         )
 
-        # Instanciar caixa de procura.
-        # ALTERADO: agora o botão chama o método buscar() dos resultados.
+        # Instanciar caixa de pesquisa e conectá-la à pesquisa dos resultados.
         self.searchBar = SearchBar(self, self.results.buscar)
-
-        # Aplicar alinhamento.
         self.searchBar.grid(
             row=1,
             column=0,
@@ -434,12 +436,19 @@ class App(customtkinter.CTk):
             sticky="ew"
         )
 
+        # NOVO: botão para exportar os resultados da pesquisa.
+        self.export_button = customtkinter.CTkButton(
+            self,
+            text="Exportar CSV",
+            command=self.results.exportar
+        )
+        self.export_button.grid(
+            row=3,
+            column=0,
+            padx=80,
+            pady=(0, 20),
+            sticky="ew"
+        )
 
-#endregion
-
-
-# Criar instancia da classe App.
-# app = App("Nome do Programa", "540x648")
-
-# # Iniciar Loop principal da interface gráfica.
-# app.mainloop()
+# Ponto de entrada do aplicativo.
+# Execute main.py para iniciar a aplicação.
