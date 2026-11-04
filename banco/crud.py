@@ -6,7 +6,7 @@ def tablemaker():
     conect = conn
     cur = conn.cursor()
     try:
-        cur.execute("CREATE TABLE IF NOT EXISTS livros (id_exclusivo VARCHAR(255) PRIMARY KEY, nome VARCHAR(255) NOT NULL, capa BYTEA, ano_de_lan INTEGER NOT NULL, autor VARCHAR(255) NOT NULL);")
+        cur.execute("CREATE TABLE IF NOT EXISTS livros (id_exclusivo VARCHAR(255) PRIMARY KEY, nome VARCHAR(255) NOT NULL, ano_de_lan INTEGER NOT NULL, autor VARCHAR(255) NOT NULL);")
         conn.commit()
     except Error as e:
         print("Falha ao criar mesa") 
@@ -14,12 +14,12 @@ def tablemaker():
         cur.close()
         conect.close()
 
-def bookadd(id_exclusivo, nome, capa, lam, autor):
+def bookadd(id_exclusivo, nome, lam, autor):
     conect = conn
     cur = conn.cursor()
     try:
-        q = "INSERT INTO livros (id_exclusivo, nome, capa, ano_de_lan, autor) values (%s, %s, %s, %s, %s);"
-        cur.execute(q, [id_exclusivo, nome, capa, lam, autor])
+        q = "INSERT INTO livros (id_exclusivo, nome, ano_de_lan, autor) values (%s, %s, %s, %s);"
+        cur.execute(q, [id_exclusivo, nome, lam, autor])
         conn.commit()
     except Error as e:
         print("Falha ao adicionar entrada") 

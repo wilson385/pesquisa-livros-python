@@ -26,13 +26,6 @@ def pesquisar_livros(titulo):
     # O return devolve a lista para quem chamou a função
     return livros
 
-# Teste temporário da API.
-if __name__ == "__main__":
-    rel = pesquisar_livros("Harry Potter")
-
-    for livro in rel:
-        print(livro)
-
 
 
     
