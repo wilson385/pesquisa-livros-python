@@ -40,6 +40,19 @@ def booklook(nome):
         cur.close()
         conect.close()
         
+def baselook():
+    conect = conn
+    cur = conect.cursor()
+    try:
+        q = "SELECT * FROM livros;"
+        results = cur.fetchall(q)
+        return results
+    except Error as e:
+        print("Falha na aquisição") 
+    finally: 
+        cur.close()
+        conect.close()
+        
 def bookdelete(id_exclusivo):
     conect = conn
     cur = conect.cursor()
