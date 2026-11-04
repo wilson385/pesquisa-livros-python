@@ -4,19 +4,19 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+pwd = os.getenv("DB_PASSWORD")
 
-def conn():
+#Funçao para fazer conexao
+def conexao():
     try:
-        pwd = os.getenv("DB_PASSWORD")
-        conexao = pg.connect(
+        conn = pg.connect(
             user = "postgres",
             password = pwd,
             host = "localhost",
             port = "5432",
-            database = "Pesquisa_livros" )
-
+            database = "livros" )
+        
         print("Conexao realizada com sucesso!!")
-
         return conn
 
     except Error as e:
