@@ -2,6 +2,7 @@ import psycopg2 as pg
 from psycopg2 import Error
 from banco_dados import conn, encerra_conn
 
+#cria a tabela
 def tablemaker():
     conect = conn
     cur = conect.cursor()
@@ -14,6 +15,7 @@ def tablemaker():
         cur.close()
         conect.close()
 
+#adiciona entradas na tabela na ordem: ID, nome, ano de lançamento, autor
 def bookadd(id_exclusivo, nome, lam, autor):
     conect = conn
     cur = conect.cursor()
@@ -26,7 +28,8 @@ def bookadd(id_exclusivo, nome, lam, autor):
     finally: 
         cur.close()
         conect.close()
-        
+
+#procura for uma entrada specifica baseado no nome        
 def booklook(nome):
     conect = conn
     cur = conect.cursor()
@@ -39,7 +42,8 @@ def booklook(nome):
     finally: 
         cur.close()
         conect.close()
-        
+
+#mostra a tabela inteira       
 def tablelook():
     conect = conn
     cur = conect.cursor()
@@ -52,7 +56,8 @@ def tablelook():
     finally: 
         cur.close()
         conect.close()
-        
+
+#deleta uma entrada specifica de acordo on o id dela        
 def bookdelete(id_exclusivo):
     conect = conn
     cur = conect.cursor()
@@ -65,7 +70,8 @@ def bookdelete(id_exclusivo):
     finally: 
         cur.close()
         conect.close()
-        
+
+#deleta todas as entradas     
 def tableclear():
     conect = conn
     cur = conect.cursor()
