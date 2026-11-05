@@ -1,10 +1,11 @@
-import psycopg2 as pg
+import psycopg2 as pg #Biblioteca do PostgreSQL
 from psycopg2 import Error
-import os
-from dotenv import load_dotenv
+import os #Comandos do SO
+from dotenv import load_dotenv 
 
-load_dotenv()
-pwd = os.getenv("DB_PASSWORD")
+load_dotenv() #Ler o arquivo .env
+
+pwd = os.getenv("DB_PASSWORD") #Busca a senha do banco
 
 #Funçao para fazer conexao
 def conexao():
@@ -14,7 +15,7 @@ def conexao():
             password = pwd,
             host = "localhost",
             port = "5432",
-            database = "livros" )
+            dbname = "livros" )
         
         print("Conexao realizada com sucesso!!")
         return conn
@@ -22,6 +23,7 @@ def conexao():
     except Error as e:
         print(f"Erro ao tentar conectar com o banco de dados {e}")
 
+#Funçao para encerrar conexao
 def encerra_conn(conn):
     if conn:
         conn.close()
