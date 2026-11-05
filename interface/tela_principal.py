@@ -14,6 +14,9 @@ import customtkinter
 # Importar Pillow para trabalhar com imagens.
 from PIL import Image, ImageTk
 
+# Importar tablelook, bookdelete e tableclear para mostrar e manusear entradas
+from data.crud import tablelook, bookdelete, tableclear
+
 # Configuração geral.
 font_name = "Georgia"
 
@@ -80,10 +83,12 @@ class DatabaseInfoWindow(customtkinter.CTkToplevel):
     
     # deleta uma entrada no banco.
     def _deleteEntry(self):
+        bookdelete(self)
         print("Entry deleted!")
     
     # limpa todos os dados do banco.
     def _clearBank(self):
+        tableclear()
         print("Bank Cleared!")
 
 # Criar classe do cabeçalho da página.

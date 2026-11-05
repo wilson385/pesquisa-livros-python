@@ -40,7 +40,7 @@ def booklook(nome):
         cur.close()
         conect.close()
         
-def baselook():
+def tablelook():
     conect = conn
     cur = conect.cursor()
     try:
