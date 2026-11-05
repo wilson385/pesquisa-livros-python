@@ -14,43 +14,157 @@ import customtkinter
 # Importar Pillow para trabalhar com imagens.
 from PIL import Image, ImageTk
 
-
 # Configuração geral.
 font_name = "Georgia"
 
+# Criar classe da janela de informação do banco de dados.
+class DatabaseInfoWindow(customtkinter.CTkToplevel):
+    def __init__(self, master, title="Data", *args, **kwargs):
+        super().__init__(master, *args, **kwargs)
+        
+        # Setup
+        win_ico = ImageTk.PhotoImage(file="interface/assets/data_ico_l.png")
+        self.title(title)
+        self.wm_iconbitmap()
+        self.iconphoto(False, win_ico)
+        self.geometry("400x550")
+        self.resizable(False, False)
+        
+        self.grid_columnconfigure(0, weight=1)
+        
+        fnt1 = customtkinter.CTkFont(font_name, 14)
+        # Listas que guardam os dados e os componentes visuais.
+        self.book_data_list = []
+        self.book_widget_list = []
+        
+        # Instanciar cabeçalho.
+        self.header = HeaderBar(self, type="dataWin")
+        self.header.grid(
+            row=0,
+            column=0,
+            padx=0,
+            pady=(0, 0),
+            sticky="ew"
+        )
+        
+        # Criar um ScrollableFrame, novamente, Esse widget tem problemas de lag.
+        self.entryList = customtkinter.CTkScrollableFrame(
+            self, 
+            height=400, 
+            corner_radius=0, 
+            label_font = fnt1, 
+            label_text="Data :"
+        )
+        self.entryList.grid(
+            row=1,
+            column=0,
+            padx=30,
+            pady=(30, 0),
+            sticky="ew"
+        )
+        
+        # Criar botão para limpar o banco de dados.
+        self.clearButt = customtkinter.CTkButton(
+            self,
+            text="Limpar Dados.",
+            font=fnt1,
+            command=self._clearBank
+        )
+        self.clearButt.grid(
+            row=2,
+            column=0,
+            padx=80,
+            pady=15,
+            sticky="ew"
+        )
+    
+    # deleta uma entrada no banco.
+    def _deleteEntry(self):
+        print("Entry deleted!")
+    
+    # limpa todos os dados do banco.
+    def _clearBank(self):
+        print("Bank Cleared!")
 
 # Criar classe do cabeçalho da página.
 class HeaderBar(customtkinter.CTkFrame):
-
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, type="default", dataWin=None, **kwargs):
         super().__init__(master, corner_radius=0, height=32, **kwargs)
-
-        # Criar imagem para o ícone de informação.
-        info_ico = customtkinter.CTkImage(
-            light_image=Image.open("interface/assets/info_ico_d.png"),
-            dark_image=Image.open("interface/assets/info_ico_l.png"),
-            size=(24, 24)
-        )
+        self.master = master
+        self.dataWin = dataWin
 
         # Configurar alinhamento.
         self.grid_columnconfigure(0, weight=1)
 
-        # Criar botão de informação.
-        self.button = customtkinter.CTkButton(
-            self,
-            image=info_ico,
-            text="",
-            width=32,
-            height=32,
-            fg_color="transparent",
-            corner_radius=0,
-            hover_color="#404040",
-            command=self.btn_callback
-        )
-        self.button.grid(row=0, column=0, padx=0, pady=0, sticky="e")
+        if type == "default": 
+            # Criar imagem para o ícone de informação.
+            info_ico = customtkinter.CTkImage(
+                light_image=Image.open("interface/assets/info_ico_d.png"),
+                dark_image=Image.open("interface/assets/info_ico_l.png"),
+                size=(24, 24)
+            )
 
+            # Criar imagem para o ícone de informação.
+            data_ico = customtkinter.CTkImage(
+                light_image=Image.open("interface/assets/data_ico_d.png"),
+                dark_image=Image.open("interface/assets/data_ico_l.png"),
+                size=(24, 24)
+            )
+            
+            # Criar botão de informação.
+            self.dataButt = customtkinter.CTkButton(
+                self,
+                image=data_ico,
+                text="",
+                width=32,
+                height=32,
+                fg_color="transparent",
+                corner_radius=0,
+                hover_color="#404040",
+                command=self._showData
+            )
+            self.dataButt.grid(row=0, column=0, padx=0, pady=0, sticky="w")
+        
+            # Criar botão de informação.
+            self.infoButt = customtkinter.CTkButton(
+                self,
+                image=info_ico,
+                text="",
+                width=32,
+                height=32,
+                fg_color="transparent",
+                corner_radius=0,
+                hover_color="#404040",
+                command=self._showCredits
+            )
+            self.infoButt.grid(row=0, column=0, padx=0, pady=0, sticky="e")
+        else:
+            # Criar imagem para o ícone de informação.
+            file_ico = customtkinter.CTkImage(
+                light_image=Image.open("interface/assets/file_ico_d.png"),
+                dark_image=Image.open("interface/assets/file_ico_l.png"),
+                size=(24, 24)
+            )
+            # Criar botão de informação.
+            self.filebutt = customtkinter.CTkButton(
+                self,
+                image=file_ico,
+                text="",
+                width=32,
+                height=32,
+                fg_color="transparent",
+                corner_radius=0,
+                hover_color="#404040",
+                command=self._selectCSV
+            )
+            self.filebutt.grid(row=0, column=0, padx=0, pady=0, sticky="w")
+            
+    # 
+    def _selectCSV(self):
+        print("File opened!")
+    
     # Mostrar uma janela com a descrição e os créditos do projeto.
-    def btn_callback(self):
+    def _showCredits(self):
         print("Creditado...")
 
         fnt1 = customtkinter.CTkFont(font_name, 14)
@@ -65,10 +179,15 @@ class HeaderBar(customtkinter.CTkFrame):
             header=True
         )
 
+    # Criar janela para mostrar o banco de dados, e Focar se já existir.
+    def _showData(self):
+        if self.dataWin is None or not self.dataWin.winfo_exists():
+            self.dataWin = DatabaseInfoWindow(self.master)
+        else:
+            self.dataWin.focus()
 
 # Criar classe da caixa de pesquisa.
 class SearchBar(customtkinter.CTkFrame):
-
     def __init__(self, master, command):
         super().__init__(master, fg_color="transparent")
 
@@ -99,7 +218,7 @@ class SearchBar(customtkinter.CTkFrame):
             fg_color="transparent",
             corner_radius=8,
             hover_color="#404040",
-            command=self.btn_callback
+            command=self._search
         )
         self.button.grid(row=0, column=0, padx=0, pady=0, sticky="w")
 
@@ -116,12 +235,12 @@ class SearchBar(customtkinter.CTkFrame):
         self.entry.grid(row=0, column=1, padx=(0, 5), pady=5, sticky="we")
 
     # Executar a pesquisa quando o usuário clicar no botão.
-    def btn_callback(self):
-        titulo = self.get_text().strip()
+    def _search(self):
+        titulo = self._getText().strip()
 
         if titulo != "":
             self.command(titulo)
-            self.reset_text()
+            self._clearText()
         else:
             messagebox.showwarning(
                 "Atenção",
@@ -129,20 +248,19 @@ class SearchBar(customtkinter.CTkFrame):
             )
 
     # Apagar o texto do campo de pesquisa.
-    def reset_text(self):
+    def _clearText(self):
         self.entry.delete(0, "end")
 
     # Retornar o texto digitado.
-    def get_text(self):
+    def _getText(self):
         return self.entry.get()
-
 
 # Criar classe dos livros que serão mostrados na interface.
 class Book(customtkinter.CTkFrame):
-
     def __init__(
         self,
         master,
+        type="default",
         image="interface/assets/app_ico.png",
         book_name="Livro X",
         author="X",
@@ -158,13 +276,6 @@ class Book(customtkinter.CTkFrame):
 
         fnt1 = customtkinter.CTkFont(font_name, 14)
         fnt2 = customtkinter.CTkFont(font_name, 16)
-
-        # Criar imagem do botão de favoritos.
-        bookmark_image = customtkinter.CTkImage(
-            light_image=Image.open("interface/assets/bookmark_ico_d.png"),
-            dark_image=Image.open("interface/assets/bookmark_ico_l.png"),
-            size=(16, 24)
-        )
 
         # Guardar os dados que serão exibidos.
         self.book_image = ImageTk.PhotoImage(file=image)
@@ -233,57 +344,82 @@ class Book(customtkinter.CTkFrame):
         )
         self.r_date.grid(row=2, column=0, padx=0, pady=0, sticky="nw")
 
-        # Criar quadro do botão de favoritos.
-        self.frame2 = customtkinter.CTkFrame(
-            self,
-            corner_radius=0,
-            fg_color="transparent"
-        )
-        self.frame2.grid(row=0, column=2, sticky="ne")
+        if type == "default":
+            # Criar imagem do botão de favoritos.
+            img = customtkinter.CTkImage(
+                light_image=Image.open("interface/assets/bookmark_ico_d.png"),
+                dark_image=Image.open("interface/assets/bookmark_ico_l.png"),
+                size=(16, 24)
+            )
+            # Criar quadro do botão de favoritos.
+            self.frame2 = customtkinter.CTkFrame(
+                self,
+                corner_radius=0,
+                fg_color="transparent"
+            )
+            self.frame2.grid(row=0, column=2, sticky="ne")
 
-        # Criar botão de favoritos.
-        self.bookmark = customtkinter.CTkButton(
-            self.frame2,
-            width=32,
-            height=32,
-            corner_radius=8,
-            hover_color="#404040",
-            fg_color="transparent",
-            bg_color="transparent",
-            font=fnt1,
-            text="",
-            image=bookmark_image,
-            command=self.btn_callback
-        )
-        self.bookmark.grid(row=0, column=0, padx=0, pady=0, sticky="ne")
-
-    def btn_callback(self):
-        self.add_bookmark()
-
-        # Fazer mais coisas aqui futuramente.
-
-    # Retornar os dados básicos do livro.
-    def get_data(self):
-        return {
-            "titulo": self.book_name,
-            "autor": self.author_text,
-            "ano": self.r_date_text
-        }
-
+            # Criar botão de favoritos.
+            self.bookmark = customtkinter.CTkButton(
+                self.frame2,
+                width=32,
+                height=32,
+                corner_radius=8,
+                hover_color="#404040",
+                fg_color="transparent",
+                bg_color="transparent",
+                font=fnt1,
+                text="",
+                image=img,
+                command=self._addBookmark
+            )
+            self.bookmark.grid(row=0, column=0, padx=0, pady=0, sticky="ne")
+        else:
+            # Criar imagem do botão de deletar.
+            img = customtkinter.CTkImage(
+                light_image=Image.open("interface/assets/trash_ico_d.png"),
+                dark_image=Image.open("interface/assets/trash_ico_l.png"),
+                size=(16, 24)
+            )
+            # Criar quadro do botão de deletar.
+            self.frame2 = customtkinter.CTkFrame(
+                self,
+                corner_radius=0,
+                fg_color="transparent"
+            )
+            self.frame2.grid(row=0, column=2, sticky="ne")
+            # Criar botão de deletar.
+            self.bookmark = customtkinter.CTkButton(
+                self.frame2,
+                width=32,
+                height=32,
+                corner_radius=8,
+                hover_color="#404040",
+                fg_color="transparent",
+                bg_color="transparent",
+                font=fnt1,
+                text="",
+                image=img,
+                command=self._deleteEntry
+            )
+            self.bookmark.grid(row=0, column=0, padx=0, pady=0, sticky="ne")
+        
+    def _deleteEntry():
+        pass
+    
     # Adicionar o livro aos favoritos.
-    def add_bookmark(self):
+    def _addBookmark(self):
         print("Bookmarked : " + self.book_name)
 
         # Fazer mais coisas aqui futuramente.
 
-
 # Criar classe do painel que mostra os resultados da pesquisa.
 class Results(customtkinter.CTkScrollableFrame):
-
     def __init__(self, master, **kwargs):
         super().__init__(
             master,
             label_text="Resultados :",
+            label_font = customtkinter.CTkFont(font_name, 14),
             corner_radius=0,
             height=400,
             **kwargs
@@ -300,7 +436,7 @@ class Results(customtkinter.CTkScrollableFrame):
         self.book_widget_list = []
 
     # Limpar os resultados anteriores.
-    def refresh(self):
+    def _refresh(self):
         for widget in self.book_widget_list:
             widget.destroy()
 
@@ -309,7 +445,7 @@ class Results(customtkinter.CTkScrollableFrame):
 
     # Pesquisar livros na API e mostrar os resultados.
     def buscar(self, titulo):
-        self.refresh()
+        self._refresh()
 
         try:
             livros = pesquisar_livros(titulo)
@@ -323,7 +459,6 @@ class Results(customtkinter.CTkScrollableFrame):
                     self,
                     text="Nenhum livro encontrado."
                 )
-
                 mensagem.grid(
                     row=0,
                     column=0,
@@ -345,7 +480,6 @@ class Results(customtkinter.CTkScrollableFrame):
                     author=livro.get("autor") or "Autor desconhecido",
                     r_date=str(ano) if ano else "Não informado"
                 )
-
                 book.grid(
                     row=i,
                     column=0,
@@ -383,10 +517,8 @@ class Results(customtkinter.CTkScrollableFrame):
                 f"Arquivo salvo com sucesso!\n{caminho}"
             )
 
-
 # Criar classe principal do aplicativo.
 class App(customtkinter.CTk):
-
     def __init__(
         self,
         title="Nome do Programa",
@@ -406,8 +538,11 @@ class App(customtkinter.CTk):
         self.resizable(False, False)
         self.grid_columnconfigure(0, weight=1)
 
+        fnt1 = customtkinter.CTkFont(font_name, 14)
+        self.dataWin = None
+
         # Instanciar cabeçalho.
-        self.header = HeaderBar(self)
+        self.header = HeaderBar(self, "default", dataWin=self.dataWin)
         self.header.grid(
             row=0,
             column=0,
@@ -422,7 +557,7 @@ class App(customtkinter.CTk):
             row=2,
             column=0,
             padx=40,
-            pady=(20, 15),
+            pady=(20, 18),
             sticky="nsew"
         )
 
@@ -439,17 +574,17 @@ class App(customtkinter.CTk):
         # NOVO: botão para exportar os resultados da pesquisa.
         self.export_button = customtkinter.CTkButton(
             self,
-            text="Exportar CSV",
+            text="Exportar CSV.",
+            font=fnt1,
             command=self.results.exportar
         )
         self.export_button.grid(
             row=3,
             column=0,
             padx=80,
-            pady=(0, 20),
+            pady=0,
             sticky="ew"
         )
 
 # Ponto de entrada do aplicativo.
 # Execute main.py para iniciar a aplicação.
-
