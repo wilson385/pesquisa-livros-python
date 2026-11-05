@@ -1,10 +1,10 @@
 import psycopg2 as pg
 from psycopg2 import Error
-from banco_dados import conn, encerra_conn
+from banco_dados import conexao, encerra_conn
 
 #cria a tabela
 def tablemaker():
-    conect = conn
+    conect = conexao()
     cur = conect.cursor()
     try:
         cur.execute("CREATE TABLE IF NOT EXISTS livros (id_exclusivo VARCHAR(255) PRIMARY KEY, nome VARCHAR(255) NOT NULL, ano_de_lan INTEGER NOT NULL, autor VARCHAR(255) NOT NULL);")
@@ -17,7 +17,7 @@ def tablemaker():
 
 #adiciona entradas na tabela na ordem: ID, nome, ano de lançamento, autor
 def bookadd(id_exclusivo, nome, lam, autor):
-    conect = conn
+    conect = conexao()
     cur = conect.cursor()
     try:
         q = "INSERT INTO livros (id_exclusivo, nome, ano_de_lan, autor) values (%s, %s, %s, %s);"
@@ -31,7 +31,7 @@ def bookadd(id_exclusivo, nome, lam, autor):
 
 #procura for uma entrada specifica baseado no nome        
 def booklook(nome):
-    conect = conn
+    conect = conexao()
     cur = conect.cursor()
     try:
         q = "SELECT * FROM livros WHERE nome ILIKE %s;"
@@ -45,7 +45,7 @@ def booklook(nome):
 
 #mostra a tabela inteira       
 def tablelook():
-    conect = conn
+    conect = conexao()
     cur = conect.cursor()
     try:
         q = "SELECT * FROM livros;"
@@ -59,7 +59,7 @@ def tablelook():
 
 #deleta uma entrada specifica de acordo on o id dela        
 def bookdelete(id_exclusivo):
-    conect = conn
+    conect = conexao()
     cur = conect.cursor()
     try:
         q = "DELETE FROM livros WHERE = %s;"
@@ -73,7 +73,7 @@ def bookdelete(id_exclusivo):
 
 #deleta todas as entradas     
 def tableclear():
-    conect = conn
+    conect = conexao()
     cur = conect.cursor()
     try:
         q = "DELETE FROM livros;"
