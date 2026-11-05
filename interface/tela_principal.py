@@ -15,7 +15,7 @@ import customtkinter
 from PIL import Image, ImageTk
 
 # Importar tablelook, bookdelete e tableclear para mostrar e manusear entradas
-from data.crud import tablelook, bookdelete, tableclear
+from banco.crud import tablelook, bookdelete, tableclear
 
 # Configuração geral.
 font_name = "Georgia"

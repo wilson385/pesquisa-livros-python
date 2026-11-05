@@ -1,6 +1,6 @@
 import psycopg2 as pg
 from psycopg2 import Error
-from banco_dados import conexao, encerra_conn
+from banco.banco_dados import conexao, encerra_conn
 
 #cria a tabela
 def tablemaker():
