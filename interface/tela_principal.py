@@ -22,7 +22,7 @@ font_name = "Georgia"
 # Criar classe da janela de informação do banco de dados.
 class CreditsInfoWindow(customtkinter.CTkToplevel):
     def __init__(self, master, title="Créditos", *args, **kwargs):
-        super().__init__(master, fg_color="#2B2B2B", *args, **kwargs)
+        super().__init__(master, fg_color=("#ECECEC", "#2B2B2B"), *args, **kwargs)
         
         # Setup
         win_ico = ImageTk.PhotoImage(file="interface/assets/info_ico_l.png")
@@ -42,7 +42,7 @@ class CreditsInfoWindow(customtkinter.CTkToplevel):
             font=fnt1, 
             text="Descrição :\n\n" + desc + "\n\nCreditos :\n\n" + credits,
         )
-        self.lab1.grid(padx=55, pady=25, sticky="se")
+        self.lab1.grid(padx=40, pady=25, sticky="se")
 
 
 # Criar classe da janela de informação do banco de dados.
