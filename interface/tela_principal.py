@@ -19,7 +19,7 @@ from PIL import Image, ImageTk
 # Configuração geral.
 font_name = "Georgia"
 
-# Criar classe da janela de informação do banco de dados.
+# Criar classe da janela de créditos.
 class CreditsInfoWindow(customtkinter.CTkToplevel):
     def __init__(self, master, title="Créditos", *args, **kwargs):
         super().__init__(master, fg_color=("#ECECEC", "#2B2B2B"), *args, **kwargs)
