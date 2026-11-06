@@ -7,7 +7,7 @@ from servicos.coletor import pesquisar_livros
 # Importar messagebox para mostrar avisos e erros.
 from tkinter import messagebox
 
-# Importar bibliotecas usadas na interface gráfica.
+# Importar biblioteca usada na interface gráfica.
 import customtkinter
 
 # Importar Pillow para trabalhar com imagens.
@@ -43,7 +43,6 @@ class CreditsInfoWindow(customtkinter.CTkToplevel):
             text="Descrição :\n\n" + desc + "\n\nCreditos :\n\n" + credits,
         )
         self.lab1.grid(padx=40, pady=25, sticky="se")
-
 
 # Criar classe da janela de informação do banco de dados.
 class DatabaseInfoWindow(customtkinter.CTkToplevel):
