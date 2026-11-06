@@ -8,21 +8,46 @@ from servicos.coletor import pesquisar_livros
 from tkinter import messagebox
 
 # Importar bibliotecas usadas na interface gráfica.
-from CTkMessagebox import CTkMessagebox
 import customtkinter
 
 # Importar Pillow para trabalhar com imagens.
 from PIL import Image, ImageTk
 
 # Importar tablelook, bookdelete e tableclear para mostrar e manusear entradas
-from banco.crud import tablelook, bookdelete, tableclear
+#from banco.crud import tablelook, bookdelete, tableclear
 
 # Configuração geral.
 font_name = "Georgia"
 
 # Criar classe da janela de informação do banco de dados.
+class CreditsInfoWindow(customtkinter.CTkToplevel):
+    def __init__(self, master, title="Créditos", *args, **kwargs):
+        super().__init__(master, fg_color="#2B2B2B", *args, **kwargs)
+        
+        # Setup
+        win_ico = ImageTk.PhotoImage(file="interface/assets/info_ico_l.png")
+        self.title(title)
+        self.wm_iconbitmap()
+        self.iconphoto(False, win_ico)
+        self.geometry("450x450")
+        self.resizable(False, False)
+
+        self.grid_columnconfigure(0, weight=1)
+        
+        fnt1 = customtkinter.CTkFont(font_name, 16)
+        desc = "Esse projeto surgiu da ideia de criar um programa\npara pesquisar livros de forma simples,\nusando a API pública da Open Library.\n\nA proposta é desenvolver uma interface gráfica\nonde seja possível pesquisar livros,\nvisualizar as informações encontradas e\nsalvar os resultados para consultar depois."
+        credits = "Wilson Oliveira\n\nGabriel Haua\n\nGabriel de Siqueira\n\nJosyane Almeida\n\nWinicius Santana"
+        
+        self.lab1 = customtkinter.CTkLabel(self, 
+            font=fnt1, 
+            text="Descrição :\n\n" + desc + "\n\nCreditos :\n\n" + credits,
+        )
+        self.lab1.grid(padx=55, pady=25, sticky="se")
+
+
+# Criar classe da janela de informação do banco de dados.
 class DatabaseInfoWindow(customtkinter.CTkToplevel):
-    def __init__(self, master, title="Data", *args, **kwargs):
+    def __init__(self, master, title="Dados", *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         
         # Setup
@@ -65,7 +90,7 @@ class DatabaseInfoWindow(customtkinter.CTkToplevel):
             height=400, 
             corner_radius=0, 
             label_font = fnt1, 
-            label_text="Data :",
+            label_text="Dados :",
             label_text_color="white",
             label_fg_color="#8BA592",
             border_width=2,
@@ -105,20 +130,19 @@ class DatabaseInfoWindow(customtkinter.CTkToplevel):
     
     # deleta uma entrada no banco.
     def _deleteEntry(self):
-        bookdelete(self)
-        print("Entry deleted!")
-    
+        print("Livro deletado!")
+        
     # limpa todos os dados do banco.
     def _clearBank(self):
-        tableclear()
-        print("Bank Cleared!")
+        print("Banco deletado!")
 
 # Criar classe do cabeçalho da página.
 class HeaderBar(customtkinter.CTkFrame):
-    def __init__(self, master, type="default", dataWin=None, **kwargs):
+    def __init__(self, master, type="default", dataWin=None, infoWin=None, **kwargs):
         super().__init__(master, corner_radius=0, height=32, fg_color=("#ECECEC", "#2B2B2B"), **kwargs)
         self.master = master
         self.dataWin = dataWin
+        self.infoWin = infoWin
 
         # Configurar alinhamento.
         self.grid_columnconfigure(0, weight=1)
@@ -188,23 +212,16 @@ class HeaderBar(customtkinter.CTkFrame):
             
     # 
     def _selectCSV(self):
-        print("File opened!")
+        print("Arquivo Aberto!")
     
     # Mostrar uma janela com a descrição e os créditos do projeto.
     def _showCredits(self):
         print("Creditado...")
 
-        fnt1 = customtkinter.CTkFont(font_name, 14)
-
-        CTkMessagebox(
-            master=self.winfo_toplevel(),
-            corner_radius=0,
-            font=fnt1,
-            title="Descrição.",
-            message="Descrição do projeto :\n\nCréditos :",
-            icon="interface/assets/info_ico_l.png",
-            header=True
-        )
+        if self.infoWin is None or not self.infoWin.winfo_exists():
+            self.infoWin = CreditsInfoWindow(self.master)
+        else:
+            self.infoWin.focus()
 
     # Criar janela para mostrar o banco de dados, e Focar se já existir.
     def _showData(self):
